@@ -8,7 +8,8 @@ import type { Command } from '../types/index.js';
 export const commandsCache = new Collection<string, Command>();
 
 export async function loadCommands() {
-    const commandsPath = join(process.cwd(), 'src', 'commands');
+    const __dirname = new URL('.', import.meta.url).pathname;
+    const commandsPath = join(__dirname, '..', 'commands');
     AuditLogger.info('Initializing Slash Command Loader...');
     let loadedCount = 0;
 
@@ -21,7 +22,8 @@ export async function loadCommands() {
                     // Recursive sub-folder loading
                     await loadDirectory(fullPath);
                 } else if (file.endsWith('.ts') || file.endsWith('.js')) {
-                    const fileUrl = `file://${fullPath.replace(/\\/g, '/')}`;
+                    // Windows fix: pathname might start with /C:
+                    const fileUrl = `file://${fullPath}`;
                     const module = await import(fileUrl);
                     const command: Command = module.default;
 

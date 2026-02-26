@@ -8,7 +8,8 @@ import type { ComponentHandler } from '../types/index.js';
 export const componentsCache = new Collection<string, ComponentHandler<any>>();
 
 export async function loadComponents() {
-    const componentsPath = join(process.cwd(), 'src', 'components');
+    const __dirname = new URL('.', import.meta.url).pathname;
+    const componentsPath = join(__dirname, '..', 'components');
     AuditLogger.info('Initializing Component Handler Loader...');
     let loadedCount = 0;
 
@@ -20,7 +21,7 @@ export async function loadComponents() {
                 if (statSync(fullPath).isDirectory()) {
                     await loadDirectory(fullPath);
                 } else if (file.endsWith('.ts') || file.endsWith('.js')) {
-                    const fileUrl = `file://${fullPath.replace(/\\/g, '/')}`;
+                    const fileUrl = `file://${fullPath}`;
                     const module = await import(fileUrl);
                     const component: ComponentHandler<any> = module.default;
 

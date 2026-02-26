@@ -5,7 +5,8 @@ import { AuditLogger } from '../utils/logger.js';
 import type { ClientEvent } from '../types/index.js';
 
 export async function loadEvents(client: Client) {
-    const eventsPath = join(process.cwd(), 'src', 'events');
+    const __dirname = new URL('.', import.meta.url).pathname;
+    const eventsPath = join(__dirname, '..', 'events');
     AuditLogger.info('Initializing Event Handler Module...');
 
     try {
@@ -13,7 +14,7 @@ export async function loadEvents(client: Client) {
         let loadedCount = 0;
 
         for (const file of eventFiles) {
-            const filePath = `file://${join(eventsPath, file).replace(/\\/g, '/')}`;
+            const filePath = `file://${join(eventsPath, file)}`;
 
             // Dynamic import in ESM must be heavily typed
             const module = await import(filePath);
