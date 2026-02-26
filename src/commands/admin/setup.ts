@@ -16,6 +16,8 @@ const setupCommand: Command = {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         try {
+            // --- 1. ROLOS (CARGOS) ---
+            // A ordem aqui define a Hierarquia Visual (Do topo para baixo)
             const rolesToEnsure = [
                 // --- CATEGORIA: STAFF ---
                 { name: '╔════ STAFF SENS ════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
@@ -24,7 +26,7 @@ const setupCommand: Command = {
                 { name: '🎧 SENS | SUPORTE', color: 0x3b82f6, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.DeafenMembers], hoist: true, legacyNames: ['Sens-Support'] },
 
                 // --- CATEGORIA: VIP ---
-                { name: '╔═════ MEMBROS ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
+                { name: '╔═════ VIP SENS ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: ['╔═════ MEMBROS ═════╗'] },
                 { name: '💎 VIP | APOIADOR', color: 0xfacc15, perms: [], hoist: true, legacyNames: ['💎 VIP / Apoiador'] },
                 { name: '🎁 SORTEADO HONORÁRIO', color: 0xec4899, perms: [], hoist: true, legacyNames: ['🎁 Sorteado Honorário'] },
 
@@ -46,7 +48,7 @@ const setupCommand: Command = {
                 { name: '╔════ COMUNIDADE ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
                 { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: true, legacyNames: ['🎮 Membro', 'Membro'] },
 
-                // --- CATEGORIA: UTILITÁRIOS ---
+                // --- CATEGORIA: SISTEMA ---
                 { name: '╔═════ SISTEMA ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
                 { name: '🤖 SENS | SISTEMA', color: 0x34d399, perms: [PermissionFlagsBits.Administrator], hoist: true, legacyNames: [] },
                 { name: '🔇 MUTADO (AUTOMOD)', color: 0x1f2937, perms: [], hoist: true, legacyNames: ['🔇 Mutado Automod'] }
@@ -54,11 +56,10 @@ const setupCommand: Command = {
 
             const createdRoles: Record<string, string> = {};
 
+            // Mapeia e Cria/Atualiza cargos
             for (const r of rolesToEnsure) {
-                // 1. Tenta achar pelo nome novo
                 let role = interaction.guild.roles.cache.find(role => role.name === r.name);
 
-                // 2. Se não achou, tenta achar por algum nome legado (Migração)
                 if (!role && r.legacyNames.length > 0) {
                     role = interaction.guild.roles.cache.find(role => r.legacyNames.includes(role.name));
                 }
@@ -67,45 +68,42 @@ const setupCommand: Command = {
                     role = await interaction.guild.roles.create({
                         name: r.name,
                         color: r.color,
-                        permissions: r.perms.length > 0 ? r.perms as any : [],
-                        hoist: r.hoist || false,
-                        reason: 'Sens-Bot Master Architecture Setup',
+                        permissions: r.perms as any,
+                        hoist: r.hoist,
+                        reason: 'Sens-Bot Architecture Setup',
                     });
                 } else {
-                    // 3. Atualiza o cargo encontrado (Novo ou Legado) para o padrão premium
-                    const needsUpdate = role.name !== r.name || role.color !== r.color || role.hoist !== (r.hoist || false);
-                    if (needsUpdate) {
-                        await role.edit({
-                            name: r.name,
-                            color: r.color,
-                            hoist: r.hoist || false,
-                            reason: 'Sens-Bot Architecture Migration'
-                        });
-                    }
+                    await role.edit({
+                        name: r.name,
+                        color: r.color,
+                        hoist: r.hoist,
+                        reason: 'Sens-Bot Architecture Sync'
+                    });
                 }
                 createdRoles[r.name] = role.id;
 
-                // Se for o cargo do bot, atribui a ele mesmo
                 if (r.name === '🤖 SENS | SISTEMA' && interaction.client.user) {
                     const self = await interaction.guild.members.fetch(interaction.client.user.id);
-                    if (!self.roles.cache.has(role.id)) {
-                        await self.roles.add(role.id);
-                    }
+                    if (!self.roles.cache.has(role.id)) await self.roles.add(role.id);
                 }
             }
 
-            // --- 2. LIMPEZA DE CARGOS ÓRFÃOS ---
-            // Remove qualquer cargo que tenha o nome antigo e que NÃO seja o cargo oficial que acabamos de setar
+            // --- 2. POSICIONAMENTO FORÇADO (Sincronização de Sidebar) ---
+            // Inverte a lista para que o primeiro do array seja a maior posição (Top)
+            const rolePositions = rolesToEnsure.map((r, index) => ({
+                role: createdRoles[r.name],
+                position: rolesToEnsure.length - index
+            }));
+
+            await interaction.guild.roles.setPositions(rolePositions);
+
+            // --- 3. LIMPEZA DE CARGOS ÓRFÃOS ---
             const allLegacyNames = rolesToEnsure.flatMap(r => r.legacyNames);
-            const managedRoleIds = Object.values(createdRoles);
+            const managedIds = Object.values(createdRoles);
 
             for (const role of interaction.guild.roles.cache.values()) {
-                if (allLegacyNames.includes(role.name) && !managedRoleIds.includes(role.id)) {
-                    try {
-                        await role.delete('Legacy Role Cleanup post-migration');
-                    } catch (e) {
-                        // Ignored (Probably Hierarchy issues)
-                    }
+                if (allLegacyNames.includes(role.name) && !managedIds.includes(role.id)) {
+                    try { await role.delete('Migration Cleanup'); } catch { }
                 }
             }
 
