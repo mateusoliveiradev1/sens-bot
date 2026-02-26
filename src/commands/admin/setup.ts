@@ -97,10 +97,15 @@ const setupCommand: Command = {
                         ]
                     },
                     {
+                        category: '🏆 HALL DA FAMA',
+                        channels: [
+                            { name: '🏆-hall-da-fama', type: ChannelType.GuildText, isPublicRead: true, noWrite: true }
+                        ]
+                    },
+                    {
                         category: '💬 ZONA DA COMUNIDADE',
                         channels: [
                             { name: '💬-chat-geral', type: ChannelType.GuildText, membersOnly: true },
-                            { name: '🏆-hall-da-fama', type: ChannelType.GuildText, isPublicRead: true, noWrite: true },
                             { name: '📸-midias', type: ChannelType.GuildText, membersOnly: true },
                             { name: '🏆-melhores-jogadas', type: ChannelType.GuildText, membersOnly: true },
                             { name: '📈-level-up', type: ChannelType.GuildText, isPublicRead: true, noWrite: true },
