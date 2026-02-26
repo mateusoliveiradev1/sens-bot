@@ -89,13 +89,25 @@ const setupCommand: Command = {
             }
 
             // --- 2. POSICIONAMENTO FORÇADO (Sincronização de Sidebar) ---
-            // Inverte a lista para que o primeiro do array seja a maior posição (Top)
-            const rolePositions = rolesToEnsure.map((r, index) => ({
-                role: createdRoles[r.name],
-                position: rolesToEnsure.length - index
-            }));
+            try {
+                // Filtra apenas cargos que o bot CONSEGUE mover (abaixo do topo dele)
+                const botHighestRole = interaction.guild.members.me?.roles.highest.position || 0;
 
-            await interaction.guild.roles.setPositions(rolePositions);
+                const rolePositions = rolesToEnsure
+                    .map((r, index) => ({
+                        role: interaction.guild?.roles.cache.get(createdRoles[r.name]),
+                        position: rolesToEnsure.length - index
+                    }))
+                    .filter(rp => rp.role && rp.role.position < botHighestRole) // Segurança Anti-Erro
+                    .map(rp => ({ role: rp.role!.id, position: rp.position }));
+
+                if (rolePositions.length > 0) {
+                    await interaction.guild.roles.setPositions(rolePositions);
+                }
+            } catch (e) {
+                AuditLogger.error('Hierarchy Sync Failed (Permission issues)', String(e));
+                // Não trava o processo, apenas loga
+            }
 
             // --- 3. LIMPEZA DE CARGOS ÓRFÃOS ---
             const allLegacyNames = rolesToEnsure.flatMap(r => r.legacyNames);
@@ -103,7 +115,12 @@ const setupCommand: Command = {
 
             for (const role of interaction.guild.roles.cache.values()) {
                 if (allLegacyNames.includes(role.name) && !managedIds.includes(role.id)) {
-                    try { await role.delete('Migration Cleanup'); } catch { }
+                    try {
+                        // Verifica se o bot pode deletar (hierarquia)
+                        if (role.position < (interaction.guild.members.me?.roles.highest.position || 0)) {
+                            await role.delete('Migration Cleanup');
+                        }
+                    } catch { }
                 }
             }
 
