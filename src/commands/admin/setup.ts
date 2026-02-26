@@ -16,26 +16,35 @@ const setupCommand: Command = {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         try {
-            // --- 1. ROLOS (CARGOS) ---
             const rolesToEnsure = [
-                { name: 'Sens-Admin', color: 0x9333ea, perms: [PermissionFlagsBits.Administrator] },
-                { name: 'Sens-Moderador', color: 0x06b6d4, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.KickMembers, PermissionFlagsBits.BanMembers] },
-                { name: 'Sens-Support', color: 0x3b82f6, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.DeafenMembers] },
-                { name: '💎 VIP / Apoiador', color: 0xfacc15, perms: [] },
-                { name: '🎁 Sorteado Honorário', color: 0xec4899, perms: [] },
-                { name: '🏆 Mestre Supremo', color: 0xd946ef, perms: [] },
-                { name: '🌟 Grandmaster PUBG', color: 0xa855f7, perms: [] },
-                { name: '☠️ Predador', color: 0xd946ef, perms: [] },
-                { name: '🥇 Lenda Viva', color: 0xf87171, perms: [] },
-                { name: '🦅 Águia de Elite', color: 0xf59e0b, perms: [] },
-                { name: '🎖️ Veterano de Guerra', color: 0xeab308, perms: [] },
-                { name: '🔫 Atirador de Elite', color: 0x84cc16, perms: [] },
-                { name: '⚔️ Sobrevivente Alpha', color: 0x22c55e, perms: [] },
-                { name: '🎯 Especialista', color: 0x10b981, perms: [] },
-                { name: '🛡️ Soldado Ativo', color: 0x06b6d4, perms: [] },
-                { name: '🔰 Recruta', color: 0x64748b, perms: [] },
-                { name: '🎮 Membro', color: 0x9ca3af, perms: [] },
-                { name: '🔇 Mutado Automod', color: 0x1f2937, perms: [] }
+                // --- CATEGORIA: STAFF ---
+                { name: '╔════ STAFF SENS ════╗', color: 0x2f3136, perms: [], hoist: true },
+                { name: 'Sens-Admin', color: 0x9333ea, perms: [PermissionFlagsBits.Administrator], hoist: true },
+                { name: 'Sens-Moderador', color: 0x06b6d4, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.KickMembers, PermissionFlagsBits.BanMembers], hoist: true },
+                { name: 'Sens-Support', color: 0x3b82f6, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.DeafenMembers], hoist: true },
+
+                // --- CATEGORIA: VIP ---
+                { name: '╔═════ MEMBROS ═════╗', color: 0x2f3136, perms: [], hoist: true },
+                { name: '💎 VIP / Apoiador', color: 0xfacc15, perms: [], hoist: true },
+                { name: '🎁 Sorteado Honorário', color: 0xec4899, perms: [], hoist: true },
+
+                // --- CATEGORIA: PATENTES ---
+                { name: '╔════ PATENTES ═════╗', color: 0x2f3136, perms: [], hoist: true },
+                { name: '🏆 Mestre Supremo', color: 0xd946ef, perms: [], hoist: true },
+                { name: '🌟 Grandmaster PUBG', color: 0xa855f7, perms: [], hoist: true },
+                { name: '☠️ Predador', color: 0xd946ef, perms: [], hoist: true },
+                { name: '🥇 Lenda Viva', color: 0xf87171, perms: [], hoist: true },
+                { name: '🦅 Águia de Elite', color: 0xf59e0b, perms: [], hoist: true },
+                { name: '🎖️ Veterano de Guerra', color: 0xeab308, perms: [], hoist: true },
+                { name: '🔫 Atirador de Elite', color: 0x84cc16, perms: [], hoist: true },
+                { name: '⚔️ Sobrevivente Alpha', color: 0x22c55e, perms: [], hoist: true },
+                { name: '🎯 Especialista', color: 0x10b981, perms: [], hoist: true },
+                { name: '🛡️ Soldado Ativo', color: 0x06b6d4, perms: [], hoist: true },
+                { name: '🔰 Recruta', color: 0x64748b, perms: [], hoist: true },
+
+                // --- CATEGORIA: UTILITÁRIOS ---
+                { name: '🎮 Membro', color: 0x9ca3af, perms: [], hoist: false },
+                { name: '🔇 Mutado Automod', color: 0x1f2937, perms: [], hoist: false }
             ];
 
             const createdRoles: Record<string, string> = {};
@@ -47,8 +56,14 @@ const setupCommand: Command = {
                         name: r.name,
                         color: r.color,
                         permissions: r.perms.length > 0 ? r.perms as any : [],
+                        hoist: r.hoist || false,
                         reason: 'Sens-Bot Master Architecture Setup',
                     });
+                } else {
+                    // Atualiza o Hoist se o cargo já existir
+                    if (role.hoist !== (r.hoist || false)) {
+                        await role.edit({ hoist: r.hoist || false });
+                    }
                 }
                 createdRoles[r.name] = role.id;
             }
