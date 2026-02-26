@@ -43,9 +43,11 @@ export class AuditLogger {
         this.persistLog('INFO', message);
     }
 
-    static error(message: string, error: any) {
+    static error(message: string, error?: any) {
         const timestamp = new Date().toISOString();
-        const stack = typeof error === 'string' ? error : inspect(error, { depth: null, colors: false });
+        const stack = error
+            ? (typeof error === 'string' ? error : inspect(error, { depth: null, colors: false }))
+            : 'Detalhes técnicos não fornecidos.';
 
         console.error(`\x1b[31m[ERROR]\x1b[0m [${timestamp}] ${message}`);
         console.error(stack);
