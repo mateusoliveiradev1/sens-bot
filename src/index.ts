@@ -34,7 +34,18 @@ loadCommands().then(() => {
     startLeaderboardCron(client);
 });
 
-// 3. Connect to Websocket
+// 3. Health Check HTTP Server for Render
+import http from 'node:http';
+const PORT = process.env.PORT || 3000;
+
+http.createServer((_req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Sens-Bot is Active and Operational 🛡️');
+}).listen(PORT, () => {
+    AuditLogger.info(`Health check server listening on port ${PORT}`);
+});
+
+// 4. Connect to Websocket
 client.login(env.DISCORD_TOKEN).catch((err) => {
     AuditLogger.error('Fatal initialization error (Token invalid or network issue)', err?.message);
     process.exit(1);

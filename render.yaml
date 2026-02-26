@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: sens-bot
+    runtime: node
+    plan: free # Usa o plano gratuito
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DISCORD_TOKEN
+        sync: false # Definir manualmente no painel do Render
+      - key: CLIENT_ID
+        sync: false # Definir manualmente no painel do Render
+      - key: DATABASE_URL
+        sync: false # Definir manualmente no painel do Render
+      - key: PORT
+        value: 3000
