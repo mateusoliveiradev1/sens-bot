@@ -3,7 +3,7 @@ import type { Command } from '../../types/index.js';
 import { UI } from '../../ui/embeds.js';
 import { AuditLogger } from '../../utils/logger.js';
 import { db } from '../../database/index.js';
-import { serverConfigs } from '../../database/schema.js';
+import { serverConfigs, leaderboardConfigs } from '../../database/schema.js';
 
 const setupCommand: Command = {
     data: new SlashCommandBuilder()
@@ -365,15 +365,30 @@ const setupCommand: Command = {
                 await sensChannel.send({ embeds: [sensEmbed], components: [sRow] });
             }
 
-            // 6.5 Aux Panels (Level Up)
+            // 6.5 Aux Panels (Level Up / Leaderboard)
             const levelChannel = interaction.guild.channels.cache.get(builtChannels['📈-level-up']) as TextChannel;
             if (levelChannel && (await levelChannel.messages.fetch({ limit: 1 })).size === 0) {
                 const lEmbed = UI.dashboardPanel('🎖️ CORREDOR DA FAMA (RANKING)', {
-                    description: 'A Engine de XP recompensa os soldados mais engajados da nossa base.\n\nGanhe XP conversando na comunidade (com proteções contra spam) para subir de Recruta até a glória da patente de **🏆 Mestre Supremo** e seja glorificado(a) neste canal!',
+                    description: '⌛ Inicializando Hall da Fama...\n*O painel de ranking será sincronizado em instantes pelo motor automático.*',
                     color: 'info',
-                    thumbnail: 'https://cdn-icons-png.flaticon.com/512/5403/5403485.png'
+                    thumbnail: 'https://cdn-icons-png.flaticon.com/512/3112/3112946.png'
                 });
-                await levelChannel.send({ embeds: [lEmbed] });
+
+                const leaderboardMsg = await levelChannel.send({ embeds: [lEmbed] });
+
+                // Registra o painel no banco para o job automático
+                await db.insert(leaderboardConfigs).values({
+                    guildId: interaction.guild.id,
+                    channelId: levelChannel.id,
+                    messageId: leaderboardMsg.id,
+                }).onConflictDoUpdate({
+                    target: leaderboardConfigs.guildId,
+                    set: {
+                        channelId: levelChannel.id,
+                        messageId: leaderboardMsg.id,
+                        lastUpdated: new Date()
+                    }
+                });
             }
 
             // 6.6 AVISOS: Mural Público de Sorteios
