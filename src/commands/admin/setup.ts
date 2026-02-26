@@ -43,8 +43,10 @@ const setupCommand: Command = {
                 { name: '🔰 RECRUTA', color: 0x64748b, perms: [], hoist: true, legacyNames: ['🔰 Recruta'] },
 
                 // --- CATEGORIA: UTILITÁRIOS ---
-                { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: false, legacyNames: ['🎮 Membro'] },
-                { name: '🔇 MUTADO (AUTOMOD)', color: 0x1f2937, perms: [], hoist: false, legacyNames: ['🔇 Mutado Automod'] }
+                { name: '╔═════ SISTEMA ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
+                { name: '🤖 SENS | SISTEMA', color: 0x34d399, perms: [PermissionFlagsBits.Administrator], hoist: true, legacyNames: [] },
+                { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: true, legacyNames: ['🎮 Membro'] },
+                { name: '🔇 MUTADO (AUTOMOD)', color: 0x1f2937, perms: [], hoist: true, legacyNames: ['🔇 Mutado Automod'] }
             ];
 
             const createdRoles: Record<string, string> = {};
@@ -79,6 +81,14 @@ const setupCommand: Command = {
                     }
                 }
                 createdRoles[r.name] = role.id;
+
+                // Se for o cargo do bot, atribui a ele mesmo
+                if (r.name === '🤖 SENS | SISTEMA' && interaction.client.user) {
+                    const self = await interaction.guild.members.fetch(interaction.client.user.id);
+                    if (!self.roles.cache.has(role.id)) {
+                        await self.roles.add(role.id);
+                    }
+                }
             }
 
             // --- 2. LIMPEZA DE CARGOS ÓRFÃOS ---
