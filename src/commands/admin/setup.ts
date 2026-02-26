@@ -94,15 +94,24 @@ const setupCommand: Command = {
                 const botHighestRole = interaction.guild.members.me?.roles.highest.position || 0;
 
                 const rolePositions = rolesToEnsure
-                    .map((r, index) => ({
-                        role: interaction.guild?.roles.cache.get(createdRoles[r.name]),
-                        position: rolesToEnsure.length - index
-                    }))
-                    .filter(rp => rp.role && rp.role.position < botHighestRole) // Segurança Anti-Erro
-                    .map(rp => ({ role: rp.role!.id, position: rp.position }));
+                    .map((r, index) => {
+                        const role = interaction.guild?.roles.cache.get(createdRoles[r.name]);
+                        return {
+                            role,
+                            targetPosition: rolesToEnsure.length - index
+                        };
+                    })
+                    .filter(rp => {
+                        if (!rp.role) return false;
+                        // O bot só pode mover quem está ABAIXO dele E para uma posição ABAIXO dele
+                        return rp.role.position < botHighestRole && rp.targetPosition < botHighestRole;
+                    })
+                    .map(rp => ({ role: rp.role!.id, position: rp.targetPosition }));
 
                 if (rolePositions.length > 0) {
                     await interaction.guild.roles.setPositions(rolePositions);
+                } else if (rolesToEnsure.length > 0) {
+                    console.warn('[WARN] O Bot está em uma posição muito baixa na hierarquia para organizar os cargos automaticamente.');
                 }
             } catch (e) {
                 AuditLogger.error('Hierarchy Sync Failed (Permission issues)', String(e));
