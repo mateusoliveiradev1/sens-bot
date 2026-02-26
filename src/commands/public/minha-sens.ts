@@ -42,7 +42,7 @@ const minhaSensCommand: Command = {
             }
 
             const rawData = await response.json();
-            AuditLogger.info(`Site Data Received for ${interaction.user.tag}: ${JSON.stringify(rawData)}`);
+            AuditLogger.systemEvent('DNA Debug: Site Data', `Dados brutos recebidos para ${interaction.user.tag}:\n\`\`\`json\n${JSON.stringify(rawData, null, 2)}\n\`\`\``);
 
             // Handle both array and single object response
             const userData = Array.isArray(rawData) ? rawData[0] : rawData;
