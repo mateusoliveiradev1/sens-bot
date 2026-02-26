@@ -30,8 +30,8 @@ const setupCommand: Command = {
 
                 // --- CATEGORIA: PATENTES ---
                 { name: '╔════ PATENTES ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
-                { name: '🏆 MESTRE SUPREMO', color: 0xd946ef, perms: [], hoist: true, legacyNames: ['🏆 Mestre Supremo'] },
-                { name: '🌟 GRANDMASTER PUBG', color: 0xa855f7, perms: [], hoist: true, legacyNames: ['🌟 Grandmaster PUBG'] },
+                { name: '🏆 MESTRE SUPREMO', color: 0xd946ef, perms: [], hoist: true, legacyNames: ['🏆 Mestre Supremo', 'Mestre PUBG'] },
+                { name: '🌟 GRANDMASTER PUBG', color: 0xa855f7, perms: [], hoist: true, legacyNames: ['🌟 Grandmaster PUBG', 'Pro Player'] },
                 { name: '☠️ PREDADOR', color: 0xf87171, perms: [], hoist: true, legacyNames: ['☠️ Predador'] },
                 { name: '🥇 LENDA VIVA', color: 0xfbbf24, perms: [], hoist: true, legacyNames: ['🥇 Lenda Viva'] },
                 { name: '🦅 ÁGUIA DE ELITE', color: 0xf59e0b, perms: [], hoist: true, legacyNames: ['🦅 Águia de Elite'] },
@@ -42,10 +42,13 @@ const setupCommand: Command = {
                 { name: '🛡️ SOLDADO ATIVO', color: 0x0ea5e9, perms: [], hoist: true, legacyNames: ['🛡️ Soldado Ativo'] },
                 { name: '🔰 RECRUTA', color: 0x64748b, perms: [], hoist: true, legacyNames: ['🔰 Recruta'] },
 
+                // --- CATEGORIA: COMUNIDADE ---
+                { name: '╔════ COMUNIDADE ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
+                { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: true, legacyNames: ['🎮 Membro', 'Membro'] },
+
                 // --- CATEGORIA: UTILITÁRIOS ---
                 { name: '╔═════ SISTEMA ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
                 { name: '🤖 SENS | SISTEMA', color: 0x34d399, perms: [PermissionFlagsBits.Administrator], hoist: true, legacyNames: [] },
-                { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: true, legacyNames: ['🎮 Membro'] },
                 { name: '🔇 MUTADO (AUTOMOD)', color: 0x1f2937, perms: [], hoist: true, legacyNames: ['🔇 Mutado Automod'] }
             ];
 

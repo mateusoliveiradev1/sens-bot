@@ -12,7 +12,7 @@ const acceptRulesButton: ComponentHandler<ButtonInteraction> = {
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         try {
-            const memberRole = interaction.guild.roles.cache.find(r => r.name === '🎮 Membro');
+            const memberRole = interaction.guild.roles.cache.find(r => r.name === '🎮 MEMBRO COMUM');
 
             if (!memberRole) {
                 await interaction.editReply({ content: '❌ Ocorreu um erro na matriz do servidor. O cargo de membro não foi encontrado pela administração.' });
