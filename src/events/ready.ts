@@ -1,7 +1,7 @@
 import { Events, ActivityType } from 'discord.js';
 import type { ClientEvent } from '../types/index.js';
 import { AuditLogger } from '../utils/logger.js';
-
+import { db } from '../database/index.js';
 
 const readyEvent: ClientEvent<Events.ClientReady> = {
     name: Events.ClientReady,
@@ -17,8 +17,6 @@ const readyEvent: ClientEvent<Events.ClientReady> = {
         try {
             AuditLogger.info('Verifying Neon Database Pool connection...');
             await db.execute('SELECT 1');
-            AuditLogger.info('✅ Neon Database Active and Queryable.');
-
             AuditLogger.info('✅ Neon Database Active and Queryable.');
         } catch (err: any) {
             AuditLogger.error('❌ Database warm-up failed on bootup.', err?.message);
