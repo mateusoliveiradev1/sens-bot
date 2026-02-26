@@ -1,5 +1,6 @@
 import { readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Collection } from 'discord.js';
 import { AuditLogger } from '../utils/logger.js';
 import type { Command } from '../types/index.js';
@@ -8,9 +9,10 @@ import type { Command } from '../types/index.js';
 export const commandsCache = new Collection<string, Command>();
 
 export async function loadCommands() {
-    const __dirname = new URL('.', import.meta.url).pathname;
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
     const commandsPath = join(__dirname, '..', 'commands');
-    AuditLogger.info('Initializing Slash Command Loader...');
+    AuditLogger.info(`Initializing Slash Command Loader at: ${commandsPath}`);
     let loadedCount = 0;
 
     async function loadDirectory(dir: string) {
