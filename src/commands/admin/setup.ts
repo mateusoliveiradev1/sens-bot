@@ -18,39 +18,46 @@ const setupCommand: Command = {
         try {
             const rolesToEnsure = [
                 // --- CATEGORIA: STAFF ---
-                { name: '╔════ STAFF SENS ════╗', color: 0x2f3136, perms: [], hoist: true },
-                { name: '👑 SENS | ADMINISTRADOR', color: 0x9333ea, perms: [PermissionFlagsBits.Administrator], hoist: true },
-                { name: '🛡️ SENS | MODERADOR', color: 0x06b6d4, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.KickMembers, PermissionFlagsBits.BanMembers], hoist: true },
-                { name: '🎧 SENS | SUPORTE', color: 0x3b82f6, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.DeafenMembers], hoist: true },
+                { name: '╔════ STAFF SENS ════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
+                { name: '👑 SENS | ADMINISTRADOR', color: 0x9333ea, perms: [PermissionFlagsBits.Administrator], hoist: true, legacyNames: ['Sens-Admin'] },
+                { name: '🛡️ SENS | MODERADOR', color: 0x06b6d4, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.KickMembers, PermissionFlagsBits.BanMembers], hoist: true, legacyNames: ['Sens-Moderador'] },
+                { name: '🎧 SENS | SUPORTE', color: 0x3b82f6, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.DeafenMembers], hoist: true, legacyNames: ['Sens-Support'] },
 
                 // --- CATEGORIA: VIP ---
-                { name: '╔═════ MEMBROS ═════╗', color: 0x2f3136, perms: [], hoist: true },
-                { name: '💎 VIP | APOIADOR', color: 0xfacc15, perms: [], hoist: true },
-                { name: '🎁 SORTEADO HONORÁRIO', color: 0xec4899, perms: [], hoist: true },
+                { name: '╔═════ MEMBROS ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
+                { name: '💎 VIP | APOIADOR', color: 0xfacc15, perms: [], hoist: true, legacyNames: ['💎 VIP / Apoiador'] },
+                { name: '🎁 SORTEADO HONORÁRIO', color: 0xec4899, perms: [], hoist: true, legacyNames: ['🎁 Sorteado Honorário'] },
 
                 // --- CATEGORIA: PATENTES ---
-                { name: '╔════ PATENTES ═════╗', color: 0x2f3136, perms: [], hoist: true },
-                { name: '🏆 MESTRE SUPREMO', color: 0xd946ef, perms: [], hoist: true },
-                { name: '🌟 GRANDMASTER PUBG', color: 0xa855f7, perms: [], hoist: true },
-                { name: '☠️ PREDADOR', color: 0xf87171, perms: [], hoist: true },
-                { name: '🥇 LENDA VIVA', color: 0xfbbf24, perms: [], hoist: true },
-                { name: '🦅 ÁGUIA DE ELITE', color: 0xf59e0b, perms: [], hoist: true },
-                { name: '🎖️ VETERANO DE GUERRA', color: 0xeab308, perms: [], hoist: true },
-                { name: '🔫 ATIRADOR DE ELITE', color: 0x84cc16, perms: [], hoist: true },
-                { name: '⚔️ SOBREVIVENTE ALPHA', color: 0x22c55e, perms: [], hoist: true },
-                { name: '🎯 ESPECIALISTA', color: 0x10b981, perms: [], hoist: true },
-                { name: '🛡️ SOLDADO ATIVO', color: 0x0ea5e9, perms: [], hoist: true },
-                { name: '🔰 RECRUTA', color: 0x64748b, perms: [], hoist: true },
+                { name: '╔════ PATENTES ═════╗', color: 0x2f3136, perms: [], hoist: true, legacyNames: [] },
+                { name: '🏆 MESTRE SUPREMO', color: 0xd946ef, perms: [], hoist: true, legacyNames: ['🏆 Mestre Supremo'] },
+                { name: '🌟 GRANDMASTER PUBG', color: 0xa855f7, perms: [], hoist: true, legacyNames: ['🌟 Grandmaster PUBG'] },
+                { name: '☠️ PREDADOR', color: 0xf87171, perms: [], hoist: true, legacyNames: ['☠️ Predador'] },
+                { name: '🥇 LENDA VIVA', color: 0xfbbf24, perms: [], hoist: true, legacyNames: ['🥇 Lenda Viva'] },
+                { name: '🦅 ÁGUIA DE ELITE', color: 0xf59e0b, perms: [], hoist: true, legacyNames: ['🦅 Águia de Elite'] },
+                { name: '🎖️ VETERANO DE GUERRA', color: 0xeab308, perms: [], hoist: true, legacyNames: ['🎖️ Veterano de Guerra'] },
+                { name: '🔫 ATIRADOR DE ELITE', color: 0x84cc16, perms: [], hoist: true, legacyNames: ['🔫 Atirador de Elite'] },
+                { name: '⚔️ SOBREVIVENTE ALPHA', color: 0x22c55e, perms: [], hoist: true, legacyNames: ['⚔️ Sobrevivente Alpha'] },
+                { name: '🎯 ESPECIALISTA', color: 0x10b981, perms: [], hoist: true, legacyNames: ['🎯 Especialista'] },
+                { name: '🛡️ SOLDADO ATIVO', color: 0x0ea5e9, perms: [], hoist: true, legacyNames: ['🛡️ Soldado Ativo'] },
+                { name: '🔰 RECRUTA', color: 0x64748b, perms: [], hoist: true, legacyNames: ['🔰 Recruta'] },
 
                 // --- CATEGORIA: UTILITÁRIOS ---
-                { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: false },
-                { name: '🔇 MUTADO (AUTOMOD)', color: 0x1f2937, perms: [], hoist: false }
+                { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: false, legacyNames: ['🎮 Membro'] },
+                { name: '🔇 MUTADO (AUTOMOD)', color: 0x1f2937, perms: [], hoist: false, legacyNames: ['🔇 Mutado Automod'] }
             ];
 
             const createdRoles: Record<string, string> = {};
 
             for (const r of rolesToEnsure) {
+                // 1. Tenta achar pelo nome novo
                 let role = interaction.guild.roles.cache.find(role => role.name === r.name);
+
+                // 2. Se não achou, tenta achar por algum nome legado (Migração)
+                if (!role && r.legacyNames.length > 0) {
+                    role = interaction.guild.roles.cache.find(role => r.legacyNames.includes(role.name));
+                }
+
                 if (!role) {
                     role = await interaction.guild.roles.create({
                         name: r.name,
@@ -60,12 +67,33 @@ const setupCommand: Command = {
                         reason: 'Sens-Bot Master Architecture Setup',
                     });
                 } else {
-                    // Atualiza o Hoist se o cargo já existir
-                    if (role.hoist !== (r.hoist || false)) {
-                        await role.edit({ hoist: r.hoist || false });
+                    // 3. Atualiza o cargo encontrado (Novo ou Legado) para o padrão premium
+                    const needsUpdate = role.name !== r.name || role.color !== r.color || role.hoist !== (r.hoist || false);
+                    if (needsUpdate) {
+                        await role.edit({
+                            name: r.name,
+                            color: r.color,
+                            hoist: r.hoist || false,
+                            reason: 'Sens-Bot Architecture Migration'
+                        });
                     }
                 }
                 createdRoles[r.name] = role.id;
+            }
+
+            // --- 2. LIMPEZA DE CARGOS ÓRFÃOS ---
+            // Remove qualquer cargo que tenha o nome antigo e que NÃO seja o cargo oficial que acabamos de setar
+            const allLegacyNames = rolesToEnsure.flatMap(r => r.legacyNames);
+            const managedRoleIds = Object.values(createdRoles);
+
+            for (const role of interaction.guild.roles.cache.values()) {
+                if (allLegacyNames.includes(role.name) && !managedRoleIds.includes(role.id)) {
+                    try {
+                        await role.delete('Legacy Role Cleanup post-migration');
+                    } catch (e) {
+                        // Ignored (Probably Hierarchy issues)
+                    }
+                }
             }
 
             const adminRoleId = createdRoles['👑 SENS | ADMINISTRADOR'];
