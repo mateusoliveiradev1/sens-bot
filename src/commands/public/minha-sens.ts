@@ -44,38 +44,52 @@ const minhaSensCommand: Command = {
             const rawData = await response.json();
 
             // Handle structure: { user: {...}, profile: {...} }
-            const userData = rawData.profile || rawData;
+            const user = rawData.user || {};
+            const profile = rawData.profile || {};
 
-            if (!userData || typeof userData !== 'object') {
+            if (!profile || typeof profile !== 'object') {
                 throw new Error('User profile data is missing or invalid in API response');
             }
 
             // Map specifically to the structure sent by the site
-            const mouse = userData.mouseName || 'Configurado no Site';
-            const dpi = userData.mouseDpi || '0';
-            const sensitivity = userData.generalSens || '0';
-            const fov = userData.fov || '90';
-            const multiplier = userData.verticalMultiplier || '1.0';
+            const mouseName = profile.mouseName || 'Mouse Gamer Padrão';
+            const mouseDpi = profile.mouseDpi || '0';
+            const pollingRate = profile.pollingRate ? `${profile.pollingRate}Hz` : 'Desconhecido';
+            const generalSens = profile.generalSens || '0';
+            const adsSens = profile.adsSens || '0';
+            const fov = profile.fov || '90';
+            const multiplier = profile.verticalMultiplier || '1.0';
 
-            const profileEmbed = UI.premium(`Sua Sensibilidade: ${rawData.user?.name || interaction.user.username}`, {
-                description: `Aqui estão os dados sincronizados diretamente do seu perfil na plataforma **Sens-PUBG**.`
+            const profileEmbed = UI.premium(`CARD DE PERFORMANCE: ${user.name || interaction.user.username}`, {
+                description: `Sincronização biométrica completa via **Sens-PUBG DNA 🧬**\nDados extraídos diretamente do seu perfil de atleta.`
             });
 
-            if (rawData.user?.image) {
-                profileEmbed.setThumbnail(rawData.user.image);
+            if (user.image) {
+                profileEmbed.setThumbnail(user.image);
             } else {
                 profileEmbed.setThumbnail(interaction.user.displayAvatarURL());
             }
 
+            // Layout por Setores: Mouse & Config Base
             profileEmbed.addFields(
-                { name: '🖱️ Mouse', value: `\`${mouse}\``, inline: true },
-                { name: '🎯 DPI', value: `\`${dpi}\``, inline: true },
-                { name: '🎮 Sens In-Game', value: `\`${sensitivity}\``, inline: true },
-                { name: '📐 FOV', value: `\`${fov}\``, inline: true },
-                { name: '↕️ Mult. Vertical', value: `\`${multiplier}\``, inline: true }
+                { name: '🖱️ HARDWARE DE PRECISÃO', value: `> **Mouse:** \`${mouseName}\`\n> **DPI:** \`${mouseDpi}\`\n> **Polling:** \`${pollingRate}\``, inline: false },
+                { name: '⚙️ CONFIGURAÇÕES BASE', value: `\`\`\`css\n[ GERAL: ${generalSens} ] [ ADS: ${adsSens} ] [ MULT. V: ${multiplier} ] [ FOV: ${fov} ]\n\`\`\``, inline: false }
             );
 
-            profileEmbed.setFooter({ text: 'Sincronizado via Sens-Bot DNA 🧬' });
+            // Setor de Miras (Escopos)
+            const scopes = profile.scopeSens || {};
+            const scopeField = [
+                `🔭 **1x:** \`${scopes['1x'] || adsSens}\` | **2x:** \`${scopes['2x'] || adsSens}\` | **3x:** \`${scopes['3x'] || adsSens}\``,
+                `🔭 **4x:** \`${scopes['4x'] || adsSens}\` | **6x:** \`${scopes['6x'] || adsSens}\``,
+                `🔭 **8x:** \`${scopes['8x'] || adsSens}\` | **15x:** \`${scopes['15x'] || adsSens}\``
+            ].join('\n');
+
+            profileEmbed.addFields({ name: '🎯 SENSIBILIDADE DE ESCOPOS', value: scopeField, inline: false });
+
+            profileEmbed.setFooter({
+                text: 'Sens-PUBG.com • Otimização de Performance 24/7',
+                iconURL: 'https://media.discordapp.net/attachments/1187422501099688047/1269006093738573906/sens_logo.png'
+            });
 
             await interaction.editReply({ embeds: [profileEmbed] });
 
