@@ -49,11 +49,19 @@ export function startLeaderboardCron(client: Client) {
                     const message = await channel.messages.fetch(config.messageId);
                     await message.edit({ embeds: [embed] });
                 } catch (err) {
-                    AuditLogger.error(`Leaderboard Message ${config.messageId} not found. Suggesting re-run of /setup-leaderboard.`);
+                    // Silently fail if message/channel doesn't exist yet, avoiding spam
+                    console.warn(`Leaderboard message ${config.messageId} not reachable yet.`);
                 }
             }
         } catch (error: any) {
-            AuditLogger.error('Leaderboard Job Failure', error?.stack);
+            // Se o erro for de tabela inexistente (comum antes do primeiro push real ou setup)
+            // silenciamos para não assustar o usuário com embeds de erro fatal.
+            const isTableError = error?.message?.includes('does not exist');
+            if (isTableError) {
+                console.warn('Leaderboard Job: Waiting for database tables to be fully synced and /setup to be run.');
+            } else {
+                AuditLogger.error('Leaderboard Job Failure', error?.stack);
+            }
         }
     });
 
