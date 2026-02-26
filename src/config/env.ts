@@ -11,6 +11,7 @@ const envSchema = z.object({
     DATABASE_URL: z.string().url('A valid Neon DB URL is required'),
     BOT_API_KEY: z.string().min(1, 'BOT_API_KEY is required for Secure Site Integration'),
     NODE_ENV: z.enum(['development', 'production']).default('development'),
+    RENDER_EXTERNAL_URL: z.string().url().optional(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

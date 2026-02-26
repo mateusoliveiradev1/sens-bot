@@ -16,48 +16,60 @@ const execAsync = promisify(exec);
 const MAX_BACKUP_FILES = 5;
 const BACKUP_DIR = join(process.cwd(), 'backups');
 
-export function startBackupCron() {
+export async function runBackup() {
     if (!existsSync(BACKUP_DIR)) {
         mkdirSync(BACKUP_DIR, { recursive: true });
     }
 
-    // Roda todos os dias às 03:00 para garantir consistência (conforme pedido de estabilidade)
-    cron.schedule('0 3 * * *', async () => {
-        AuditLogger.backup('Starting daily database backup job...');
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const filename = `sens-pubg-db-${timestamp}.sql.gz`;
-        const filepath = join(BACKUP_DIR, filename);
-        const backupId = randomUUID();
+    AuditLogger.backup('Starting database backup job...');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `sens-pubg-db-${timestamp}.sql.gz`;
+    const filepath = join(BACKUP_DIR, filename);
+    const backupId = randomUUID();
 
+    try {
+        // Verifica se pg_dump existe (Render tem, mas locais podem não ter)
         try {
-            // Verifica se pg_dump existe no path ou tenta rodar (Em ambientes Render/Vercel pode falhar se não houver binário)
-            const command = `pg_dump "${env.DATABASE_URL}" | gzip > "${filepath}"`;
-            await execAsync(command);
-
-            const stats = statSync(filepath);
-            const sizeMB = parseFloat((stats.size / (1024 * 1024)).toFixed(2));
-
-            AuditLogger.backup(`Backup successful: \`${filename}\` (${sizeMB} MB)`);
-
-            await db.insert(backupsHistory).values({
-                id: backupId,
-                fileName: filename,
-                status: 'SUCCESS',
-                fileSizeMb: sizeMB,
-            });
-
-            await cleanupDataAndFiles();
-
-        } catch (error: any) {
-            AuditLogger.backup(`Backup generation failed: ${error.message}`, true);
-
-            await db.insert(backupsHistory).values({
-                id: backupId,
-                fileName: filename,
-                status: 'FAILED',
-                notes: error?.message,
-            });
+            await execAsync('pg_dump --version');
+        } catch (e) {
+            throw new Error('pg_dump binary not found in environment PATH');
         }
+
+        const command = `pg_dump "${env.DATABASE_URL}" | gzip > "${filepath}"`;
+        await execAsync(command);
+
+        const stats = statSync(filepath);
+        const sizeMB = parseFloat((stats.size / (1024 * 1024)).toFixed(2));
+
+        AuditLogger.backup(`Backup successful: \`${filename}\` (${sizeMB} MB)`);
+
+        await db.insert(backupsHistory).values({
+            id: backupId,
+            fileName: filename,
+            status: 'SUCCESS',
+            fileSizeMb: sizeMB,
+        });
+
+        await cleanupDataAndFiles();
+        return { success: true, filename, sizeMB };
+
+    } catch (error: any) {
+        AuditLogger.backup(`Backup generation failed: ${error.message}`, true);
+
+        await db.insert(backupsHistory).values({
+            id: backupId,
+            fileName: filename,
+            status: 'FAILED',
+            notes: error?.message,
+        });
+        return { success: false, error: error.message };
+    }
+}
+
+export function startBackupCron() {
+    // Roda todos os dias às 03:00
+    cron.schedule('0 3 * * *', async () => {
+        await runBackup();
     });
 
     AuditLogger.info('Cron Job registered: Automated Database Backups (Daily + Database Cleanup)');

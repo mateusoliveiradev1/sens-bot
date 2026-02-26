@@ -41,11 +41,21 @@ import http from 'node:http';
 const PORT = process.env.PORT || 3000;
 
 http.createServer((_req, res) => {
+    AuditLogger.info('Health check ping received from external monitor.');
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Sens-Bot is Active and Operational 🛡️');
 }).listen(PORT, () => {
     AuditLogger.info(`Health check server listening on port ${PORT}`);
 });
+
+// Self-Ping mechanism to prevent Render sleep (Recommended to use with UptimeRobot)
+if (env.RENDER_EXTERNAL_URL) {
+    AuditLogger.info(`Initializing Self-Ping to ${env.RENDER_EXTERNAL_URL} (10min interval)...`);
+    setInterval(() => {
+        fetch(env.RENDER_EXTERNAL_URL!)
+            .catch((e: any) => AuditLogger.info(`Self-Ping status: ${e?.message}`));
+    }, 600000); // 10 minutos
+}
 
 // 4. Connect to Websocket
 client.login(env.DISCORD_TOKEN).catch((err) => {
