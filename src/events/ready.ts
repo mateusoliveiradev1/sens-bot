@@ -48,7 +48,7 @@ const readyEvent: ClientEvent<Events.ClientReady> = {
                 }
 
             } catch (e: any) {
-                AuditLogger.error(`Falha ao proteger Owner da Guilda ${guild.name}`, e?.message);
+                AuditLogger.error(`Falha ao proteger Owner da Guilda ${guild.name}`, e);
             }
         }
 
