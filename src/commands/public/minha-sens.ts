@@ -42,27 +42,30 @@ const minhaSensCommand: Command = {
             }
 
             const rawData = await response.json();
-            AuditLogger.systemEvent('DNA Debug: Site Data', `Dados brutos recebidos para ${interaction.user.tag}:\n\`\`\`json\n${JSON.stringify(rawData, null, 2)}\n\`\`\``);
 
-            // Handle both array and single object response
-            const userData = Array.isArray(rawData) ? rawData[0] : rawData;
+            // Handle structure: { user: {...}, profile: {...} }
+            const userData = rawData.profile || rawData;
 
             if (!userData || typeof userData !== 'object') {
                 throw new Error('User profile data is missing or invalid in API response');
             }
 
-            // Support both camelCase and snake_case from DB
-            const mouse = userData.mouseName || userData.mouse_name || 'Não definido';
-            const dpi = userData.dpi || userData.dpi_value || '0';
-            const sensitivity = userData.inGameSens || userData.in_game_sens || '0';
+            // Map specifically to the structure sent by the site
+            const mouse = userData.mouseName || 'Configurado no Site';
+            const dpi = userData.mouseDpi || '0';
+            const sensitivity = userData.generalSens || '0';
             const fov = userData.fov || '90';
-            const multiplier = userData.verticalMultiplier || userData.vertical_multiplier || '1.0';
+            const multiplier = userData.verticalMultiplier || '1.0';
 
-            const profileEmbed = UI.premium(`Sua Sensibilidade: ${interaction.user.username}`, {
+            const profileEmbed = UI.premium(`Sua Sensibilidade: ${rawData.user?.name || interaction.user.username}`, {
                 description: `Aqui estão os dados sincronizados diretamente do seu perfil na plataforma **Sens-PUBG**.`
             });
 
-            profileEmbed.setThumbnail(interaction.user.displayAvatarURL());
+            if (rawData.user?.image) {
+                profileEmbed.setThumbnail(rawData.user.image);
+            } else {
+                profileEmbed.setThumbnail(interaction.user.displayAvatarURL());
+            }
 
             profileEmbed.addFields(
                 { name: '🖱️ Mouse', value: `\`${mouse}\``, inline: true },
