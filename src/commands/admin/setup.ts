@@ -86,6 +86,18 @@ const setupCommand: Command = {
                     const self = await interaction.guild.members.fetch(interaction.client.user.id);
                     if (!self.roles.cache.has(role.id)) await self.roles.add(role.id);
                 }
+
+                // Se for o cargo de Admin Supremo, garante que o DONO do servidor o tenha
+                if (r.name === '👑 SENS | ADMINISTRADOR' && interaction.guild.ownerId) {
+                    try {
+                        const owner = await interaction.guild.members.fetch(interaction.guild.ownerId);
+                        if (owner && !owner.roles.cache.has(role.id)) {
+                            await owner.roles.add(role.id);
+                        }
+                    } catch (e) {
+                        AuditLogger.error('Failed to auto-assign Admin role to Owner', String(e));
+                    }
+                }
             }
 
             // --- 2. POSICIONAMENTO FORÇADO (Sincronização de Sidebar) ---
