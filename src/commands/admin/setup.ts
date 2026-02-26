@@ -100,6 +100,7 @@ const setupCommand: Command = {
                         category: '💬 ZONA DA COMUNIDADE',
                         channels: [
                             { name: '💬-chat-geral', type: ChannelType.GuildText, membersOnly: true },
+                            { name: '🏆-hall-da-fama', type: ChannelType.GuildText, isPublicRead: true, noWrite: true },
                             { name: '📸-midias', type: ChannelType.GuildText, membersOnly: true },
                             { name: '🏆-melhores-jogadas', type: ChannelType.GuildText, membersOnly: true },
                             { name: '📈-level-up', type: ChannelType.GuildText, isPublicRead: true, noWrite: true },
@@ -365,26 +366,37 @@ const setupCommand: Command = {
                 await sensChannel.send({ embeds: [sensEmbed], components: [sRow] });
             }
 
-            // 6.5 Aux Panels (Level Up / Leaderboard)
+            // 6.5 Aux Panels (Level Up)
             const levelChannel = interaction.guild.channels.cache.get(builtChannels['📈-level-up']) as TextChannel;
             if (levelChannel && (await levelChannel.messages.fetch({ limit: 1 })).size === 0) {
                 const lEmbed = UI.dashboardPanel('🎖️ CORREDOR DA FAMA (RANKING)', {
+                    description: 'A Engine de XP recompensa os soldados mais engajados da nossa base.\n\nGanhe XP conversando na comunidade para subir de Recruta até a glória da patente de **🏆 Mestre Supremo**!',
+                    color: 'info',
+                    thumbnail: 'https://cdn-icons-png.flaticon.com/512/5403/5403485.png'
+                });
+                await levelChannel.send({ embeds: [lEmbed] });
+            }
+
+            // 6.5.1 LEADERBOARD AUTOMÁTICO (CANAL EXCLUSIVO)
+            const hallChannel = interaction.guild.channels.cache.get(builtChannels['🏆-hall-da-fama']) as TextChannel;
+            if (hallChannel && (await hallChannel.messages.fetch({ limit: 1 })).size === 0) {
+                const hEmbed = UI.dashboardPanel('🏆 HALL DA FAMA: TOP 10 SENS-PUBG', {
                     description: '⌛ Inicializando Hall da Fama...\n*O painel de ranking será sincronizado em instantes pelo motor automático.*',
                     color: 'info',
                     thumbnail: 'https://cdn-icons-png.flaticon.com/512/3112/3112946.png'
                 });
 
-                const leaderboardMsg = await levelChannel.send({ embeds: [lEmbed] });
+                const leaderboardMsg = await hallChannel.send({ embeds: [hEmbed] });
 
                 // Registra o painel no banco para o job automático
                 await db.insert(leaderboardConfigs).values({
                     guildId: interaction.guild.id,
-                    channelId: levelChannel.id,
+                    channelId: hallChannel.id,
                     messageId: leaderboardMsg.id,
                 }).onConflictDoUpdate({
                     target: leaderboardConfigs.guildId,
                     set: {
-                        channelId: levelChannel.id,
+                        channelId: hallChannel.id,
                         messageId: leaderboardMsg.id,
                         lastUpdated: new Date()
                     }
