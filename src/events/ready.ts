@@ -1,8 +1,7 @@
 import { Events, ActivityType } from 'discord.js';
 import type { ClientEvent } from '../types/index.js';
 import { AuditLogger } from '../utils/logger.js';
-import { db } from '../database/index.js';
-import { serverConfigs } from '../database/schema.js';
+
 
 const readyEvent: ClientEvent<Events.ClientReady> = {
     name: Events.ClientReady,
@@ -20,12 +19,7 @@ const readyEvent: ClientEvent<Events.ClientReady> = {
             await db.execute('SELECT 1');
             AuditLogger.info('✅ Neon Database Active and Queryable.');
 
-            // 4. Load configured Audit Channels from DB
-            const configs = await db.select().from(serverConfigs).limit(1);
-            if (configs.length > 0 && configs[0]) {
-                AuditLogger.initialize(client, configs[0].auditChannelId || undefined, configs[0].backupsChannelId || undefined);
-                AuditLogger.info('Loaded server configuration paths from Neon DB.');
-            }
+            AuditLogger.info('✅ Neon Database Active and Queryable.');
         } catch (err: any) {
             AuditLogger.error('❌ Database warm-up failed on bootup.', err?.message);
         }

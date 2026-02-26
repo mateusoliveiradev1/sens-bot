@@ -174,12 +174,15 @@ export class AuditLogger {
     private static async dispatchToDiscord(channelId: string | null, content: any) {
         if (!this.discordClient || !channelId) return;
         try {
-            const channel = await this.discordClient.channels.fetch(channelId) as TextChannel;
+            const channel = await this.discordClient.channels.fetch(channelId).catch(() => null);
             if (channel && channel.isTextBased()) {
-                await channel.send(content);
+                await (channel as TextChannel).send(content);
             }
-        } catch (e) {
-            console.error('Failed to dispatch log to Discord:', e);
+        } catch (e: any) {
+            // Se o erro for 10003 (Unknown Channel), não logamos no console para evitar spam
+            if (e?.code !== 10003) {
+                console.error('Failed to dispatch log to Discord:', e?.message || e);
+            }
         }
     }
 }

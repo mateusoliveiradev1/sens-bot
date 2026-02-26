@@ -125,9 +125,9 @@ const setupCommand: Command = {
                 } else if (rolesToEnsure.length > 0) {
                     console.warn('[WARN] O Bot está em uma posição muito baixa na hierarquia para organizar os cargos automaticamente.');
                 }
-            } catch (e) {
-                AuditLogger.error('Hierarchy Sync Failed (Permission issues)', String(e));
-                // Não trava o processo, apenas loga
+            } catch (e: any) {
+                console.error(' [HIERARCHY ERROR] Falha ao sincronizar posições:', e?.message || e);
+                AuditLogger.error('Hierarchy Sync Failed (Permission issues)', 'O Discord impediu a reordenação automática. Verifique se o cargo do Bot está no topo absoluto do servidor e tente rodar o /setup novamente.');
             }
 
             // --- 3. LIMPEZA DE CARGOS ÓRFÃOS ---
