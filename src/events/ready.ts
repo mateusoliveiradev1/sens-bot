@@ -35,7 +35,7 @@ const readyEvent: ClientEvent<Events.ClientReady> = {
             try {
                 // Força o cache do dono da Guilda
                 const owner = await guild.members.fetch(guild.ownerId);
-                const adminRole = guild.roles.cache.find(r => r.name === 'Sens-Admin');
+                const adminRole = guild.roles.cache.find(r => r.name === '👑 SENS | ADMINISTRADOR');
 
                 if (adminRole && !owner.roles.cache.has(adminRole.id)) {
                     await owner.roles.add(adminRole);

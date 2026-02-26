@@ -19,32 +19,32 @@ const setupCommand: Command = {
             const rolesToEnsure = [
                 // --- CATEGORIA: STAFF ---
                 { name: '╔════ STAFF SENS ════╗', color: 0x2f3136, perms: [], hoist: true },
-                { name: 'Sens-Admin', color: 0x9333ea, perms: [PermissionFlagsBits.Administrator], hoist: true },
-                { name: 'Sens-Moderador', color: 0x06b6d4, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.KickMembers, PermissionFlagsBits.BanMembers], hoist: true },
-                { name: 'Sens-Support', color: 0x3b82f6, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.DeafenMembers], hoist: true },
+                { name: '👑 SENS | ADMINISTRADOR', color: 0x9333ea, perms: [PermissionFlagsBits.Administrator], hoist: true },
+                { name: '🛡️ SENS | MODERADOR', color: 0x06b6d4, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.KickMembers, PermissionFlagsBits.BanMembers], hoist: true },
+                { name: '🎧 SENS | SUPORTE', color: 0x3b82f6, perms: [PermissionFlagsBits.ManageMessages, PermissionFlagsBits.MuteMembers, PermissionFlagsBits.DeafenMembers], hoist: true },
 
                 // --- CATEGORIA: VIP ---
                 { name: '╔═════ MEMBROS ═════╗', color: 0x2f3136, perms: [], hoist: true },
-                { name: '💎 VIP / Apoiador', color: 0xfacc15, perms: [], hoist: true },
-                { name: '🎁 Sorteado Honorário', color: 0xec4899, perms: [], hoist: true },
+                { name: '💎 VIP | APOIADOR', color: 0xfacc15, perms: [], hoist: true },
+                { name: '🎁 SORTEADO HONORÁRIO', color: 0xec4899, perms: [], hoist: true },
 
                 // --- CATEGORIA: PATENTES ---
                 { name: '╔════ PATENTES ═════╗', color: 0x2f3136, perms: [], hoist: true },
-                { name: '🏆 Mestre Supremo', color: 0xd946ef, perms: [], hoist: true },
-                { name: '🌟 Grandmaster PUBG', color: 0xa855f7, perms: [], hoist: true },
-                { name: '☠️ Predador', color: 0xd946ef, perms: [], hoist: true },
-                { name: '🥇 Lenda Viva', color: 0xf87171, perms: [], hoist: true },
-                { name: '🦅 Águia de Elite', color: 0xf59e0b, perms: [], hoist: true },
-                { name: '🎖️ Veterano de Guerra', color: 0xeab308, perms: [], hoist: true },
-                { name: '🔫 Atirador de Elite', color: 0x84cc16, perms: [], hoist: true },
-                { name: '⚔️ Sobrevivente Alpha', color: 0x22c55e, perms: [], hoist: true },
-                { name: '🎯 Especialista', color: 0x10b981, perms: [], hoist: true },
-                { name: '🛡️ Soldado Ativo', color: 0x06b6d4, perms: [], hoist: true },
-                { name: '🔰 Recruta', color: 0x64748b, perms: [], hoist: true },
+                { name: '🏆 MESTRE SUPREMO', color: 0xd946ef, perms: [], hoist: true },
+                { name: '🌟 GRANDMASTER PUBG', color: 0xa855f7, perms: [], hoist: true },
+                { name: '☠️ PREDADOR', color: 0xf87171, perms: [], hoist: true },
+                { name: '🥇 LENDA VIVA', color: 0xfbbf24, perms: [], hoist: true },
+                { name: '🦅 ÁGUIA DE ELITE', color: 0xf59e0b, perms: [], hoist: true },
+                { name: '🎖️ VETERANO DE GUERRA', color: 0xeab308, perms: [], hoist: true },
+                { name: '🔫 ATIRADOR DE ELITE', color: 0x84cc16, perms: [], hoist: true },
+                { name: '⚔️ SOBREVIVENTE ALPHA', color: 0x22c55e, perms: [], hoist: true },
+                { name: '🎯 ESPECIALISTA', color: 0x10b981, perms: [], hoist: true },
+                { name: '🛡️ SOLDADO ATIVO', color: 0x0ea5e9, perms: [], hoist: true },
+                { name: '🔰 RECRUTA', color: 0x64748b, perms: [], hoist: true },
 
                 // --- CATEGORIA: UTILITÁRIOS ---
-                { name: '🎮 Membro', color: 0x9ca3af, perms: [], hoist: false },
-                { name: '🔇 Mutado Automod', color: 0x1f2937, perms: [], hoist: false }
+                { name: '🎮 MEMBRO COMUM', color: 0x9ca3af, perms: [], hoist: false },
+                { name: '🔇 MUTADO (AUTOMOD)', color: 0x1f2937, perms: [], hoist: false }
             ];
 
             const createdRoles: Record<string, string> = {};
@@ -68,11 +68,11 @@ const setupCommand: Command = {
                 createdRoles[r.name] = role.id;
             }
 
-            const adminRoleId = createdRoles['Sens-Admin'];
-            const modRoleId = createdRoles['Sens-Moderador'];
-            const supportRoleId = createdRoles['Sens-Support'];
-            const membroRoleId = createdRoles['🎮 Membro'];
-            const vipRoleId = createdRoles['💎 VIP / Apoiador'];
+            const adminRoleId = createdRoles['👑 SENS | ADMINISTRADOR'];
+            const modRoleId = createdRoles['🛡️ SENS | MODERADOR'];
+            const supportRoleId = createdRoles['🎧 SENS | SUPORTE'];
+            const membroRoleId = createdRoles['🎮 MEMBRO COMUM'];
+            const vipRoleId = createdRoles['💎 VIP | APOIADOR'];
 
             const officialArchitecture: Array<{
                 category: string;

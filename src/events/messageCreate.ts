@@ -8,17 +8,17 @@ import { UI } from '../ui/embeds.js';
 
 // As patentes Supremas Mapeadas pelo Nível do Jogador
 const RANK_REWARDS = [
-    { level: 5, roleName: '🔰 Recruta' },
-    { level: 10, roleName: '🛡️ Soldado Ativo' },
-    { level: 20, roleName: '🎯 Especialista' },
-    { level: 30, roleName: '⚔️ Sobrevivente Alpha' },
-    { level: 40, roleName: '🔫 Atirador de Elite' },
-    { level: 50, roleName: '🎖️ Veterano de Guerra' },
-    { level: 60, roleName: '🦅 Águia de Elite' },
-    { level: 70, roleName: '🥇 Lenda Viva' },
-    { level: 80, roleName: '☠️ Predador' },
-    { level: 90, roleName: '🌟 Grandmaster PUBG' },
-    { level: 100, roleName: '🏆 Mestre Supremo' }
+    { level: 5, roleName: '🔰 RECRUTA' },
+    { level: 10, roleName: '🛡️ SOLDADO ATIVO' },
+    { level: 20, roleName: '🎯 ESPECIALISTA' },
+    { level: 30, roleName: '⚔️ SOBREVIVENTE ALPHA' },
+    { level: 40, roleName: '🔫 ATIRADOR DE ELITE' },
+    { level: 50, roleName: '🎖️ VETERANO DE GUERRA' },
+    { level: 60, roleName: '🦅 ÁGUIA DE ELITE' },
+    { level: 70, roleName: '🥇 LENDA VIVA' },
+    { level: 80, roleName: '☠️ PREDADOR' },
+    { level: 90, roleName: '🌟 GRANDMASTER PUBG' },
+    { level: 100, roleName: '🏆 MESTRE SUPREMO' }
 ];
 
 // O Coração da Progressão (Fórmula padrão MEE6: 5/6 * level * \u00b2 + 50 * level + 100)
