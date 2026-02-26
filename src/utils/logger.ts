@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import type { Client, TextChannel } from 'discord.js';
 import { db } from '../database/index.js';
-import { auditLogs } from '../database/schema.js';
+import { auditLogs, serverConfigs } from '../database/schema.js';
 import { UI } from '../ui/embeds.js';
 
 export class AuditLogger {
@@ -104,6 +104,47 @@ export class AuditLogger {
         });
 
         this.dispatchToDiscord(this.backupChannelId, { embeds: [embed] });
+    }
+
+    static async memberJoined(member: import('discord.js').GuildMember) {
+        const configs = await db.select().from(serverConfigs).limit(1);
+        const welcomeId = configs[0]?.welcomeChannelId;
+        if (!welcomeId) return;
+
+        const embed = UI.dashboardPanel('🚀 NOVO RECRUTA DETECTADO', {
+            description: `Seja bem-vindo ao **QG SENS-PUBG**, <@${member.id}>!\n\nVocê acaba de pousar na maior central de desempenho do PUBG. Para liberar o acesso total aos canais e squads, leia as diretrizes em <#${welcomeId}> (📖-regras) e aceite os termos.`,
+            color: 'success',
+            thumbnail: member.user.displayAvatarURL(),
+            fields: [
+                { name: 'Soldado', value: member.user.tag, inline: true },
+                { name: 'ID', value: `\`${member.id}\``, inline: true }
+            ]
+        }).setImage('https://media.discordapp.net/attachments/1187422501099688047/1269006093738573906/sens_logo.png');
+
+        this.dispatchToDiscord(welcomeId, { content: `<@${member.id}>`, embeds: [embed] });
+        this.persistLog('AUDIT', `Membro ${member.user.tag} entrou no servidor.`);
+    }
+
+    static async memberLeft(member: import('discord.js').PartialGuildMember | import('discord.js').GuildMember) {
+        const configs = await db.select().from(serverConfigs).limit(1);
+        const leaveId = configs[0]?.leaveChannelId || this.auditChannelId;
+        if (!leaveId) return;
+
+        const embed = UI.dashboardPanel('🚨 BAIXA NO PELOTÃO', {
+            description: `O usuário **${member.user?.tag || 'Desconhecido'}** abandonou a base.`,
+            color: 'error',
+            fields: [
+                { name: 'ID do Usuário', value: `\`${member.id}\``, inline: true },
+                { name: 'Status', value: '🔴 `DISCONNECTED`', inline: true }
+            ]
+        });
+
+        if (member.user?.displayAvatarURL()) {
+            embed.setThumbnail(member.user.displayAvatarURL());
+        }
+
+        this.dispatchToDiscord(leaveId, { embeds: [embed] });
+        this.persistLog('AUDIT', `Membro ${member.user?.tag || member.id} saiu do servidor.`);
     }
 
     static ticketReport(channelName: string, originalReason: string, resolutionReason: string, staffUser: import('discord.js').User) {

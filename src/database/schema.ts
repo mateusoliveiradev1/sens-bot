@@ -14,6 +14,8 @@ export const serverConfigs = pgTable('server_configs', {
     auditChannelId: varchar('audit_channel_id', { length: 255 }),
     backupsChannelId: varchar('backups_channel_id', { length: 255 }),
     ticketPanelChannelId: varchar('ticket_panel_channel_id', { length: 255 }),
+    welcomeChannelId: varchar('welcome_channel_id', { length: 255 }),
+    leaveChannelId: varchar('leave_channel_id', { length: 255 }),
     setupComplete: timestamp('setup_complete'),
 });
 

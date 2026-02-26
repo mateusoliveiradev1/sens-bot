@@ -458,6 +458,8 @@ const setupCommand: Command = {
                 auditChannelId: builtChannels['📜-audit-logs'],
                 backupsChannelId: builtChannels['💾-backups-db'],
                 ticketPanelChannelId: builtChannels['📩-suporte'],
+                welcomeChannelId: builtChannels['👋-bem-vindo'],
+                leaveChannelId: builtChannels['📜-audit-logs'], // Saídas logadas na auditoria para a staff
                 setupComplete: new Date(),
             }).onConflictDoUpdate({
                 target: serverConfigs.guildId,
@@ -467,6 +469,8 @@ const setupCommand: Command = {
                     auditChannelId: builtChannels['📜-audit-logs'],
                     backupsChannelId: builtChannels['💾-backups-db'],
                     ticketPanelChannelId: builtChannels['📩-suporte'],
+                    welcomeChannelId: builtChannels['👋-bem-vindo'],
+                    leaveChannelId: builtChannels['📜-audit-logs'],
                     setupComplete: new Date(),
                 }
             });
