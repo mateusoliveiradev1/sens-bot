@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { inspect } from 'node:util';
 import type { Client, TextChannel } from 'discord.js';
 import { db } from '../database/index.js';
 import { auditLogs, serverConfigs } from '../database/schema.js';
@@ -42,10 +43,13 @@ export class AuditLogger {
         this.persistLog('INFO', message);
     }
 
-    static error(message: string, stack?: string) {
+    static error(message: string, error: any) {
         const timestamp = new Date().toISOString();
+        const { inspect } = await import('node:util');
+        const stack = typeof error === 'string' ? error : inspect(error, { depth: null, colors: false });
+
         console.error(`\x1b[31m[ERROR]\x1b[0m [${timestamp}] ${message}`);
-        if (stack) console.error(stack);
+        console.error(stack);
 
         this.persistLog('ERROR', message, stack);
 
