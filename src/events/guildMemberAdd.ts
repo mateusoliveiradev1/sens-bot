@@ -5,7 +5,11 @@ import { AuditLogger } from '../utils/logger.js';
 const guildMemberAddEvent: ClientEvent<Events.GuildMemberAdd> = {
     name: Events.GuildMemberAdd,
     async execute(member) {
-        await AuditLogger.memberJoined(member);
+        console.log(`[DEBUG] Member Joined: ${member.user.tag} in ${member.guild.name}`);
+        // Delay para garantir sincronização de cache do Discord
+        setTimeout(async () => {
+            await AuditLogger.memberJoined(member);
+        }, 2000);
     },
 };
 

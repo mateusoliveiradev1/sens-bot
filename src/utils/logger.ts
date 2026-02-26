@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { Client, TextChannel } from 'discord.js';
 import { db } from '../database/index.js';
 import { auditLogs, serverConfigs } from '../database/schema.js';
+import { eq } from 'drizzle-orm';
 import { UI } from '../ui/embeds.js';
 
 export class AuditLogger {
@@ -107,9 +108,13 @@ export class AuditLogger {
     }
 
     static async memberJoined(member: import('discord.js').GuildMember) {
-        const configs = await db.select().from(serverConfigs).limit(1);
+        const configs = await db.select().from(serverConfigs).where(eq(serverConfigs.guildId, member.guild.id)).limit(1);
         const welcomeId = configs[0]?.welcomeChannelId;
-        if (!welcomeId) return;
+
+        if (!welcomeId) {
+            console.error(`[AUDIT-LOG] No Welcome Channel ID found in DB for guild ${member.guild.id}`);
+            return;
+        }
 
         const embed = UI.dashboardPanel('🚀 NOVO RECRUTA DETECTADO', {
             description: `Seja bem-vindo ao **QG SENS-PUBG**, <@${member.id}>!\n\nVocê acaba de pousar na maior central de desempenho do PUBG. Para liberar o acesso total aos canais e squads, leia as diretrizes em <#${welcomeId}> (📖-regras) e aceite os termos.`,
@@ -126,7 +131,7 @@ export class AuditLogger {
     }
 
     static async memberLeft(member: import('discord.js').PartialGuildMember | import('discord.js').GuildMember) {
-        const configs = await db.select().from(serverConfigs).limit(1);
+        const configs = await db.select().from(serverConfigs).where(eq(serverConfigs.guildId, member.guild.id)).limit(1);
         const leaveId = configs[0]?.leaveChannelId || this.auditChannelId;
         if (!leaveId) return;
 

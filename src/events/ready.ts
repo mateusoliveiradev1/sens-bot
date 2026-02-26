@@ -1,4 +1,4 @@
-import { Events } from 'discord.js';
+import { Events, ActivityType } from 'discord.js';
 import type { ClientEvent } from '../types/index.js';
 import { AuditLogger } from '../utils/logger.js';
 import { db } from '../database/index.js';
@@ -63,6 +63,12 @@ const readyEvent: ClientEvent<Events.ClientReady> = {
         // 7. Ligar a Máquina Autônoma de Sorteios Inteligentes
         const { startGiveawayEngine } = await import('../utils/giveaway-engine.js');
         startGiveawayEngine(client);
+
+        // 8. Visual Presence: Bot looking sharp for launch
+        client.user?.setPresence({
+            activities: [{ name: 'sens-pubg.com', type: ActivityType.Watching }],
+            status: 'online',
+        });
     },
 };
 
