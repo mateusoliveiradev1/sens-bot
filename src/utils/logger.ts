@@ -45,7 +45,6 @@ export class AuditLogger {
 
     static error(message: string, error: any) {
         const timestamp = new Date().toISOString();
-        const { inspect } = await import('node:util');
         const stack = typeof error === 'string' ? error : inspect(error, { depth: null, colors: false });
 
         console.error(`\x1b[31m[ERROR]\x1b[0m [${timestamp}] ${message}`);
