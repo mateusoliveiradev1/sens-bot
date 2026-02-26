@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
 import type { Command } from '../../types/index.js';
 import { UI } from '../../ui/embeds.js';
 import { env } from '../../config/env.js';
@@ -10,7 +10,7 @@ const minhaSensCommand: Command = {
         .setDescription('🔍 Visualiza a sua sensibilidade sincronizada no site Sens-PUBG.'),
 
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: [MessageFlags.Ephemeral] });
 
         try {
             // URL da API do site (Vercel)
