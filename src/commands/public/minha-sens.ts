@@ -41,9 +41,23 @@ const minhaSensCommand: Command = {
                 throw new Error(`Site API responded with status ${response.status}`);
             }
 
-            const userData = await response.json();
+            const rawData = await response.json();
+            AuditLogger.info(`Site Data Received for ${interaction.user.tag}: ${JSON.stringify(rawData)}`);
 
-            // Supondo que o JSON retorne { name, mouseName, dpi, inGameSens, fov, verticalMultiplier, ... }
+            // Handle both array and single object response
+            const userData = Array.isArray(rawData) ? rawData[0] : rawData;
+
+            if (!userData || typeof userData !== 'object') {
+                throw new Error('User profile data is missing or invalid in API response');
+            }
+
+            // Support both camelCase and snake_case from DB
+            const mouse = userData.mouseName || userData.mouse_name || 'Não definido';
+            const dpi = userData.dpi || userData.dpi_value || '0';
+            const sensitivity = userData.inGameSens || userData.in_game_sens || '0';
+            const fov = userData.fov || '90';
+            const multiplier = userData.verticalMultiplier || userData.vertical_multiplier || '1.0';
+
             const profileEmbed = UI.premium(`Sua Sensibilidade: ${interaction.user.username}`, {
                 description: `Aqui estão os dados sincronizados diretamente do seu perfil na plataforma **Sens-PUBG**.`
             });
@@ -51,11 +65,11 @@ const minhaSensCommand: Command = {
             profileEmbed.setThumbnail(interaction.user.displayAvatarURL());
 
             profileEmbed.addFields(
-                { name: '🖱️ Mouse', value: `\`${userData.mouseName || 'Não definido'}\``, inline: true },
-                { name: '🎯 DPI', value: `\`${userData.dpi || '0'}\``, inline: true },
-                { name: '🎮 Sens In-Game', value: `\`${userData.inGameSens || '0'}\``, inline: true },
-                { name: '📐 FOV', value: `\`${userData.fov || '90'}\``, inline: true },
-                { name: '↕️ Mult. Vertical', value: `\`${userData.verticalMultiplier || '1.0'}\``, inline: true }
+                { name: '🖱️ Mouse', value: `\`${mouse}\``, inline: true },
+                { name: '🎯 DPI', value: `\`${dpi}\``, inline: true },
+                { name: '🎮 Sens In-Game', value: `\`${sensitivity}\``, inline: true },
+                { name: '📐 FOV', value: `\`${fov}\``, inline: true },
+                { name: '↕️ Mult. Vertical', value: `\`${multiplier}\``, inline: true }
             );
 
             profileEmbed.setFooter({ text: 'Sincronizado via Sens-Bot DNA 🧬' });
