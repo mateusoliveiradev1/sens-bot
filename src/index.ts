@@ -21,8 +21,10 @@ const client = new Client({
 
 AuditLogger.info('Sens-Bot Lifecycle Starting...');
 
-// 1. Cron Systems
+// 1. Cron & Heartbeat Systems
 startBackupCron();
+import { startHeartbeat } from './jobs/heartbeat.js';
+startHeartbeat();
 
 // 2. Load Modular Caches
 loadCommands().then(() => {

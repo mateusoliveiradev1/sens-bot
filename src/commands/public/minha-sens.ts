@@ -17,7 +17,8 @@ const minhaSensCommand: Command = {
             const siteUrl = 'https://sens-pubg.vercel.app';
             const response = await fetch(`${siteUrl}/api/bot/user/${interaction.user.id}`, {
                 headers: {
-                    'Authorization': `Bearer ${env.BOT_API_KEY}`
+                    'Authorization': `Bearer ${env.BOT_API_KEY}`,
+                    'x-bot-api-key': env.BOT_API_KEY
                 }
             });
 

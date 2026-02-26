@@ -1,8 +1,10 @@
 import { pgTable, text, timestamp, varchar, integer, real } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
-    id: varchar('id', { length: 255 }).primaryKey(), // Discord User ID
+    id: varchar('id', { length: 255 }).primaryKey(), // Internal UUID or Discord ID (Legacy)
+    discordId: varchar('discord_id', { length: 255 }).unique(), // Discord ID Sync
     username: varchar('username', { length: 255 }).notNull(),
+    isPremium: integer('is_premium').default(0).notNull(), // 0: Free, 1: VIP
     joinedAt: timestamp('joined_at').defaultNow().notNull(),
     sensPubgUrl: text('sens_pubg_url'), // Link publico para perfil pessoal site
 });
