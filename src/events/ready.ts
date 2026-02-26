@@ -39,7 +39,7 @@ const readyEvent: ClientEvent<Events.ClientReady> = {
 
                 if (adminRole && !owner.roles.cache.has(adminRole.id)) {
                     await owner.roles.add(adminRole);
-                    AuditLogger.systemEvent('🛡️ Blindagem de Owner', `O cargo Supremo Master [\`Sens-Admin\`] foi reatribuído compulsoriamente ao verdadeiro dono do servidor (${owner.user.tag}) garantindo controle absoluto.`);
+                    AuditLogger.systemEvent('🛡️ Blindagem de Owner', `O cargo Supremo Master ['👑 SENS | ADMINISTRADOR'] foi reatribuído compulsoriamente ao verdadeiro dono do servidor (${owner.user.tag}) garantindo controle absoluto.`);
                 }
 
                 // 6. Sincronização Base de Dados - Garante que o Owner existe na Tabela Master 'users'

@@ -572,7 +572,7 @@ const setupCommand: Command = {
 
             const embed = UI.success(
                 'Arquitetura V5.0 Suprema Implantada 🚀',
-                'O servidor agora possui Sistema Anti-Raid via Portaria Isolada e Blindagem total de Setores.\n\n✅ Cargos de Staff criados e atribuídos na matriz de permissões.\n✅ Categorias Sociais de Staff criadas isoladamente (\`🗄️ STAFF SENS-PUBG\`).\n✅ Central de Controle e Sorteios restrita ao **Sens-Admin**.\n✅ Canais base para clonagem de Voz Premium (VIPs, Squads) gerados com sucesso.'
+                'O servidor agora possui Sistema Anti-Raid via Portaria Isolada e Blindagem total de Setores.\n\n✅ Cargos de Staff criados e atribuídos na matriz de permissões.\n✅ Categorias Sociais de Staff criadas isoladamente (\`🗄️ STAFF SENS-PUBG\`).\n✅ Central de Controle e Sorteios restrita ao **👑 SENS | ADMINISTRADOR**.\n✅ Canais base para clonagem de Voz Premium (VIPs, Squads) gerados com sucesso.'
             );
 
             try {

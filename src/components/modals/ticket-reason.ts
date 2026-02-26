@@ -17,8 +17,8 @@ const ticketReasonModal: ComponentHandler<ModalSubmitInteraction> = {
         const ticketName = `ticket-${interaction.user.username.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
 
         try {
-            const staffRole = interaction.guild.roles.cache.find(r => r.name === 'Sens-Admin');
-            const supportRole = interaction.guild.roles.cache.find(r => r.name === 'Sens-Support');
+            const staffRole = interaction.guild.roles.cache.find(r => r.name === '👑 SENS | ADMINISTRADOR');
+            const supportRole = interaction.guild.roles.cache.find(r => r.name === '🎧 SENS | SUPORTE');
 
             const ticketChannel = await interaction.guild.channels.create({
                 name: ticketName,
